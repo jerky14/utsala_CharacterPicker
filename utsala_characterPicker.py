@@ -116,12 +116,12 @@ class PickerUi (QtWidgets.QDialog):
         if self.check_FKIK("rArm") < 0.5:
             print ("Checker says left arm is in fk")
             self.rArm_fkikBox.setCurrentText("FK")
-            rightArmCtrls = self.getLeftArmControlsFK()
+            rightArmCtrls = self.getRightArmControlsFK()
         elif self.check_FKIK("rArm") > 0.5:
             print ("Checker says left arm is in ik")
             self.rArm_fkikBox.setCurrentText("IK")
-            rightArmCtrls = self.getLeftArmControlsIK()
-        self.rArm_fkikBox.currentIndexChanged.connect(partial(self.toggleFKIK, "lArm"))
+            rightArmCtrls = self.getRightArmControlsIK()
+        self.rArm_fkikBox.currentIndexChanged.connect(partial(self.toggleFKIK, "rArm"))
         self.tab1.layout.addWidget(self.rArm_fkikBox, rArmGridRef, 0)
         rArmGridRef+=1
 
@@ -176,15 +176,16 @@ class PickerUi (QtWidgets.QDialog):
         
         leftFingerCtrls = self.getLeftFingerControls()
         
-        lThumbGridRef = 2
+        lThumbGridRef = 0
         for item in leftFingerCtrls.get("thumbCtrls"):
             lThumbxBtn = QtWidgets.QPushButton(item)
             lThumbxBtn.setStyleSheet('background-color: rgb(102,205,0);color: black')
             value = leftFingerCtrls.get("thumbCtrls").get(item)
             lThumbxBtn.clicked.connect(partial(self.runSelect, value))
-            self.tab2.layout.addWidget(lThumbxBtn, lThumbGridRef, 1)
+            self.tab2.layout.addWidget(lThumbxBtn, lThumbGridRef, 0)
             lThumbGridRef+=1
-        
+
+
         lIndexGridRef = 1
         for item in leftFingerCtrls.get("indexCtrls"):
             lIndexBtn = QtWidgets.QPushButton(item)
@@ -194,12 +195,12 @@ class PickerUi (QtWidgets.QDialog):
             self.tab2.layout.addWidget(lIndexBtn, lIndexGridRef, 1)
             lIndexGridRef+=1
             
-        lMiddleGridRef = 0
+        lMiddleGridRef = 1
         for item in leftFingerCtrls.get("middleCtrls"):
             lMiddleBtn = QtWidgets.QPushButton(item)
             lMiddleBtn.setStyleSheet('background-color: rgb(102,205,0);color: black')
             value = leftFingerCtrls.get("middleCtrls").get(item)
-            lIndexBtn.clicked.connect(partial(self.runSelect, value))
+            lMiddleBtn.clicked.connect(partial(self.runSelect, value))
             self.tab2.layout.addWidget(lMiddleBtn, lMiddleGridRef, 2)
             lMiddleGridRef+=1
             
@@ -263,6 +264,7 @@ class PickerUi (QtWidgets.QDialog):
         if ctrl is ("lArm"):
             
             lArmCtrl = cmds.ls("*L_FKIK_Switch_ctrl")
+            print ("lArm is running")
             if lArmCtrl[0] is not None:
                     if val is 0:
                         cmds.setAttr(lArmCtrl[0] + ".FKIKBlend", 0)

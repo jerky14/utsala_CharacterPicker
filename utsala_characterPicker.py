@@ -233,20 +233,8 @@ class PickerUi (QtWidgets.QDialog):
         if _layout is not None:
             for i in reversed(range(_layout.count())):
                 _layout.itemAt(i).widget().deleteLater()
-        #for i in range(_layout.count()): print (i)
-        #if _layout is not None:
-        #    while _layout.count():
-        #        child = _layout.takeAt(0)
-        #        if child.widget() is not None:
-        #            child.widget().deleteLater()
-                #elif child.layout() is not None:
-                    #self.clear_layout(child.layout())
 
-    
-        
 
-       
-        
     #---------------
     # FUNCTION
     #---------------
@@ -254,11 +242,8 @@ class PickerUi (QtWidgets.QDialog):
     def runSelect(self, value):
         mod = cmds.getModifiers()
         if (mod & 1) > 0:
-            print ("shift held")
-            print ("selecting " + value)
             cmds.select( "*" + value, add=True )
         else:
-            print ("selecting " + value)
             cmds.select( "*" + value, r=True )
         
 
@@ -289,21 +274,15 @@ class PickerUi (QtWidgets.QDialog):
     
     def check_FKIK(self, ctrl):
         
-        print ("CHECKING IKFK VALUE OF " + ctrl)
-        
         if ctrl is ("lArm"):
             lArmCtrl = cmds.ls("*L_FKIK_Switch_ctrl")
             value = cmds.getAttr(lArmCtrl[0] + ".FKIKBlend")
-            
-            print ("value is " + str(value))
             
             return value
         
         if ctrl is ("rArm"):
             rArmCtrl = cmds.ls("*R_FKIK_Switch_ctrl")
             value = cmds.getAttr(rArmCtrl[0] + ".FKIKBlend")
-            
-            print ("value is " + str(value))
             
             return value
 

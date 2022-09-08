@@ -88,11 +88,9 @@ class PickerUi (QtWidgets.QDialog):
         self.lArm_fkikBox = QtWidgets.QComboBox()
         self.lArm_fkikBox.addItems(["FK", "IK"])
         if self.check_FKIK("lArm") < 0.5:
-            print ("Checker says left arm is in fk")
             self.lArm_fkikBox.setCurrentText("FK")
             leftArmCtrls = self.getLeftArmControlsFK()
         elif self.check_FKIK("lArm") > 0.5:
-            print ("Checker says left arm is in ik")
             self.lArm_fkikBox.setCurrentText("IK")
             leftArmCtrls = self.getLeftArmControlsIK()
         self.lArm_fkikBox.currentIndexChanged.connect(partial(self.toggleFKIK, "lArm"))
@@ -114,11 +112,9 @@ class PickerUi (QtWidgets.QDialog):
         self.rArm_fkikBox = QtWidgets.QComboBox()
         self.rArm_fkikBox.addItems(["FK", "IK"])
         if self.check_FKIK("rArm") < 0.5:
-            print ("Checker says left arm is in fk")
             self.rArm_fkikBox.setCurrentText("FK")
             rightArmCtrls = self.getRightArmControlsFK()
         elif self.check_FKIK("rArm") > 0.5:
-            print ("Checker says left arm is in ik")
             self.rArm_fkikBox.setCurrentText("IK")
             rightArmCtrls = self.getRightArmControlsIK()
         self.rArm_fkikBox.currentIndexChanged.connect(partial(self.toggleFKIK, "rArm"))
@@ -237,7 +233,7 @@ class PickerUi (QtWidgets.QDialog):
         if _layout is not None:
             for i in reversed(range(_layout.count())):
                 _layout.itemAt(i).widget().deleteLater()
-        for i in range(_layout.count()): print (i)
+        #for i in range(_layout.count()): print (i)
         #if _layout is not None:
         #    while _layout.count():
         #        child = _layout.takeAt(0)
@@ -256,15 +252,22 @@ class PickerUi (QtWidgets.QDialog):
     #---------------
     
     def runSelect(self, value):
-        print ("selecting " + value)
-        cmds.select( "*" + value, r=True )
+        mod = cmds.getModifiers()
+        if (mod & 1) > 0:
+            print ("shift held")
+            print ("selecting " + value)
+            cmds.select( "*" + value, add=True )
+        else:
+            print ("selecting " + value)
+            cmds.select( "*" + value, r=True )
+        
+
         
     def toggleFKIK(self, ctrl, val):
 
         if ctrl is ("lArm"):
             
             lArmCtrl = cmds.ls("*L_FKIK_Switch_ctrl")
-            print ("lArm is running")
             if lArmCtrl[0] is not None:
                     if val is 0:
                         cmds.setAttr(lArmCtrl[0] + ".FKIKBlend", 0)
@@ -275,7 +278,6 @@ class PickerUi (QtWidgets.QDialog):
 
         if ctrl is ("rArm"):
             rArmCtrl = cmds.ls("*R_FKIK_Switch_ctrl")
-            print ("rArm is running")
             if rArmCtrl[0] is not None:
                     if val is 0:
                         cmds.setAttr(rArmCtrl[0] + ".FKIKBlend", 0)

@@ -86,7 +86,7 @@ class PickerUi (QtWidgets.QDialog):
 
 
         lArmGridRef = startShoulderGridRef
-        RightArmCtrls = []
+        leftArmCtrls = []
         self.lArm_fkikBox = QtWidgets.QComboBox()
         self.lArm_fkikBox.addItems(["FK", "IK"])
         if self.check_FKIK("lArm") < 0.5:
